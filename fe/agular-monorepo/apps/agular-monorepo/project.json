@@ -1,0 +1,98 @@
+{
+  "name": "agular-monorepo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "agular-monorepo",
+  "sourceRoot": "apps/agular-monorepo/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/agular-monorepo",
+        "index": "apps/agular-monorepo/src/index.html",
+        "browser": "apps/agular-monorepo/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/agular-monorepo/tsconfig.app.json",
+        "inlineStyleLanguage": "less",
+        "assets": [
+          "apps/agular-monorepo/src/favicon.ico",
+          "apps/agular-monorepo/src/assets"
+        ],
+        "styles": ["apps/agular-monorepo/src/styles.less"],
+        "scripts": [],
+        "server": "apps/agular-monorepo/src/main.server.ts",
+        "prerender": true,
+        "ssr": {
+          "entry": "apps/agular-monorepo/server.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "agular-monorepo:build:production"
+        },
+        "development": {
+          "buildTarget": "agular-monorepo:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "agular-monorepo:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "apps/agular-monorepo/**/*.ts",
+          "apps/agular-monorepo/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/agular-monorepo/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "agular-monorepo:build",
+        "staticFilePath": "dist/apps/agular-monorepo/browser"
+      }
+    }
+  }
+}
